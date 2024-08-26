@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>QWERTY EXPERTS</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+    <link rel="icon"
+        href="https://media.licdn.com/dms/image/D4D0BAQF8OorOvhEpaA/company-logo_200_200/0/1704359069342/qwerty_experts_pvt_ltd_logo?e=2147483647&v=beta&t=uoUfuHmTflXmXcWgQBjx9ahPvLzs6_ZGTKA2A8q1-4w"
+        type="image/x-icon">
+</head>
+
+<body>
+    <div class="container">
+        <div class="chatbox">
+            <h1>Hey! Welcome to QWERTY EXPERTS</h1>
+            <div id="chat">
+                <div id="messages"></div>
+                <div class="input-container">
+                    <input type="text" id="messageInput" placeholder="How may I help you?">
+                    <button id="sendButton">Send</button>
+                </div>
+            </div>
+        </div>
+    </div>
+    <script>
+        document.getElementById('sendButton').addEventListener('click', async function () {
+            const messageInput = document.getElementById('messageInput');
+            const message = messageInput.value;
+            if (!message) return;
+
+            document.getElementById('messages').innerHTML += `<div class="message user"><b>You:</b> ${message}</div>`;
+            messageInput.value = '';
+
+            const response = await fetch('/chat', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({ message })
+            });
+
+            const data = await response.json();
+            document.getElementById('messages').innerHTML += `<div class="message bot"><b>HR Bot:</b> ${data.answer}</div>`;
+            document.getElementById('messages').scrollTop = document.getElementById('messages').scrollHeight; // Scroll to bottom
+        });
+    </script>
+</body>
+
+</html>
